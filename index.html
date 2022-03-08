@@ -1,0 +1,28 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <link rel="stylesheet" href="style.css">
+ </head>
+ <body onload="loadTasks()">
+  <main>
+      <div>ToDo App</div>
+      <div id="create-task-box">
+          <input  id="task-name" type="text" required> <input id="task-date" type="date" >
+           <button onclick="AddTask()">Add Task</button> <button onclick="deleteMultipleTask()">Delete Selected</button>
+      </div>
+
+      <div id="search-box">
+          <input type="text"/> <button onclick="searchTasks()">search</button>
+      </div>
+      <!-- display  tasks -->
+      <ul id="task-list-box">
+
+      </ul>
+  </main>
+     <script src="script.js"></script>
+ </body>
+ </html>
