@@ -141,5 +141,290 @@ function validateMongoDbIds(ids)
 module.exports ={ validateMongoDbIds };
 
 
+//////
+dashboard.ejs
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <link rel="stylesheet" href="/DashboardStyle.css">
+ </head>
+ <body  >
+  <main>
+      <div>Tweet</div>
+      <div id="create--boxt">
+        <label for="">Title: </label>
+          <input  id="title" type="text" required> 
+          <br/>
+          <label for="">Text: </label>
+          <input  id="text" type="text" required> 
+          <br/>
+          <br/>
+           <button onclick="createTweet()">Create Tweet</button>  
+      </div>
+
+      <div id="search-box">
+          <button onclick="getAllTweets()">My Tweets</button><button onclick="getTweetFeed()">TweetFeed</button>
+      </div>
+      <!-- display  tasks -->
+      <div id="tweet-list-box">
+
+      </div>
+  </main>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+     <script src="/DashboardScript.js"></script>
+ </body>
+ </html>
+
+
+/////login.ejs
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/LoginStyle.css">
+</head>
+<body>
+    <div class="container">
+
+      
+        <br/>
+        <div class="inputfield">
+            <label for="">Username or Email id</label>
+            <input type="text" id="loginId" placeholder="Enter your username">
+        </div>
+        <br/>
+        <br/>
+        <div class="inputfield">
+            <label for="">Password</label>
+            <input type="password"id="password" placeholder="Enter your Password">
+        </div>
+        <br/>
+        <div>
+            <button id="signinbtn" onclick="callLoginApi()">sign in</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/LoginScript.js"></script>
+</body>
+</html>
+///register.ejs
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>REgister</title>
+  </head>
+  <body>
+     
+
+    <form action="/auth/register" method="POST">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
+
+///privateconst
+const dbURIbiml20000=`mongodb+srv://bimal:bimalkr@cluster0.tlc4fmt.mongodb.net/twitter?retryWrites=true&w=majority`
+const SESSIONKEY=`Helloworld1`;
+
+const bmlkumar2000Project0URI=`mongodb+srv://bmlkumar2000:brother@cluster0.b0wedxn.mongodb.net/twitter?retryWrites=true&w=majority`
+const bmlkumar2000username=`bmlkumar2000`;
+const password=`brother`;
+const mongodbcompass='mongodb://localhost:27017';
+module.exports= { dbURIbiml20000, SESSIONKEY, mongodbcompass };
+
+//dshbrdscr
+const config = {
+    headers: {
+        'content-type': 'application/json'
+    }
+}
+
+window.onload = getAllTweets();
+
+ 
+
+    function getAllTweets() {
+    
+    axios.post('/tweet/read', JSON.stringify({}), config).then(res => {
+        if (res.data.status != 200)
+        {
+            alert('failed to read tweets . Please try again');
+            return;
+        }
+        const dbTweetArr = res.data.data;
+        console.log(dbTweetArr);
+        document.getElementById('tweet-list-box').insertAdjacentHTML('beforeend', dbTweetArr.map(tweet => {
+            return ` 
+            <div>
+            </br>
+            <div class=${tweet._id}><span>Title : ${tweet.title}</span>
+                      <div ><span>Text : ${tweet.text}</span></div>
+            </div> 
+             
+            <button class=${tweet._id} onclick="editTweet(event)">Edit</button>
+            <button  class=${tweet._id} onclick="deleteTweet(event)">x</button>
+            </br>
+            </div>
+            `
+        }).join(' '))
+
+    }).catch (err=> {
+        console.log(err);
+    })
+}
+function editTweet(event) {
+    
+}
+function createTweet() {
+    const tweet = {
+         title:document.getElementById('title').value,
+         text:document.getElementById('text').value
+    }
+
+    axios.post('/tweet/create', JSON.stringify(tweet), config).then(res => {
+        
+        if (res.data.status === 200)
+        {
+            console.log(res.data.data);
+            document.getElementById('tweet-list-box').insertAdjacentHTML('beforeend',
+                `<div>
+                 </br>
+            <div class=${res.data.data.tweetId}><span>Title : ${res.data.data.title}</span>
+            <div ><span>Text : ${res.data.data.text}</span></div>
+            </div> 
+   
+           <button class=${res.data.data.tweetId} onclick="editTweet(event)">Edit</button>
+          <button  class=${res.data.data.tweetId} onclick="deleteTweet(event)">x</button>
+          </br>
+  </div>
+  `
+            
+            )
+            return;
+        }
+        
+        else {
+            alert(res.message);
+            return;
+        }
+
+
+    }).catch(err => {
+        alert("Couldn't create tweet . please try again");
+        return;
+        
+    })
+    
+}
+function deleteTweet(event) {
+     
+    const tweetId = event.target.getAttribute('class');
+    
+    console.log(tweetId);
+
+    axios.post('/tweet/delete', JSON.stringify({ tweetId }), config).then(res => {
+        
+        if (res.data.status === 200)
+        {
+            console.log(res.data);
+            console.log(res.data.status);
+            alert(res.data.message);
+            event.target.parentNode.remove();
+            return;
+
+        }
+
+    }).catch(err => {
+        alert("some error occured while deleting");
+        return;
+    })
+   
+
+
+    
+}
+function sortTweet() {
+    
+}
+
+function getTweetFeed() {
+
+    axios.post('/tweet/tweetfeed', JSON.stringify({}), config).then(res => {
+        
+        
+    })
+
+
+}
+
+////lgnscr
+const config = {
+    headers: {
+        'content-type':'application/json'
+    }
+}
+function callLoginApi() {
+    const student = {
+          loginId:document.getElementById("loginId").value,
+          password:document.getElementById("password").value
+    }
+
+    axios.post('/auth/login', JSON.stringify(student),config).then(({ data }) =>
+    {
+        if (data.status === 200)
+            window.alert(data.message+"  "+data.data.name);
+        else{
+            window.alert(data.error);
+        }
+            console.log(data);
+        }).catch(err => {
+            window.alert(err.error);
+            console.log("Something went wrong please try again" + err);
+        })
+
+}
+
+
+
+
 
 
